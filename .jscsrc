@@ -1,0 +1,7 @@
+{
+  "validateIndentation": 2,
+  "esnext": true,
+  "requireTrailingComma": false,
+  "disallowTrailingWhitespace": false,
+  "requireCapitalizedComments": false
+}

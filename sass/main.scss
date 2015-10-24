@@ -1,0 +1,96 @@
+@import "normalize";
+@import "bourbon";
+@import "font-awesome";
+
+body {
+  background: #e2ebf3;
+  font-family: 'Slabo 27px', serif;
+}
+
+h1 {
+  color: #456;
+  text-align: center;
+}
+
+.todo-add {
+  border: 4px solid #d9d9d9;
+  border-radius: 2px;
+  width: 460px;
+  margin: auto;
+  margin-bottom: 5px;
+
+  input {
+    background: #f0f0f0;
+    padding: 10px;
+    width: 400px;
+    display: block;
+    float: left;
+    color: #456;
+    border: none;
+  }
+
+  button {
+    width: 40px;
+    background: #2ac833;
+    padding: 10px;
+    border: none;
+    color: lighten(#2ac833, 30%);
+
+    &:hover {
+      background: #2acf33;
+      color: lighten(#2acf33, 40%);
+      box-shadow: 0 0 15px darken(#2acf33, 15%) inset;
+    }
+  }
+}
+
+.todo-list {
+  list-style: none;
+  border: 4px solid #d9d9d9;
+  border-radius: 2px;
+  width: 460px;
+  padding: 0;
+  margin: auto;
+  
+  .todo {
+    .title {
+      background: #f0f0f0;
+      padding: 10px;
+      width: 400px;
+      display: block;
+      float: left;
+      color: #456;
+      border-bottom: 1px solid #e0e0e0;
+      &.complete {
+        text-decoration: line-through;
+      }
+    }
+    button {
+      width: 40px;
+      padding: 10px;
+      border: none;
+      &.remove {
+        background: #f64848;
+        border-bottom: 1px solid lighten(#f64848, 10%);
+        color: lighten(#f64848, 30%);
+
+        &:hover {
+          background: #ff2828;
+          color: lighten(#ff2828, 40%);
+          box-shadow: 0 0 15px darken(red, 20%) inset;
+        }
+      }
+      &.undo {
+        background: #1eb0f8;
+        border-bottom: 1px solid lighten(#1eb0f8, 10%);
+        color: lighten(#1eb0f8, 30%);
+
+        &:hover {
+          background: #1eb0ff;
+          color: lighten(#1eb0ff, 40%);
+          box-shadow: 0 0 15px darken(#1eb0ff, 20%) inset;
+        }
+      }
+    }
+  }
+}
