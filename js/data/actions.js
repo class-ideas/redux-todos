@@ -8,11 +8,6 @@ function merge(...objs) {
 
 // types
 
-// export const ADD_TODO = 'ADD_TODO';
-// export const COMPLETE_TODO = 'COMPLETE_TODO';
-// export const RESET_TODO = 'RESET_TODO';
-
-
 export const FETCH_TODOS_REQUEST = 'FETCH_TODOS_REQUEST';
 export const FETCH_TODOS_SUCCESS = 'FETCH_TODOS_SUCCESS';
 

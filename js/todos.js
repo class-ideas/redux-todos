@@ -1,27 +1,21 @@
 import React, {Component} from 'react';
+import IconButton from './icon_button';
 
 class Todo extends Component {
-  getIcon(want) {
-    if (this.props.todo.isUpdating) {
-      return 'fa fa-spin fa-spinner';
-    } else {
-      return `fa fa-${want}`;
-    }
-  }
-
-  getAction() {
+  getButton() {
+    let spin = this.props.todo.isUpdating;
     if (this.props.todo.completeAt) {
-      return (
-        <button onClick={this.props.onUndo} className="undo">
-          <i className={this.getIcon('undo')}/>
-        </button>
-      );
+      return <IconButton 
+                className="undo"
+                onClick={this.props.onUndo}
+                icon="undo"
+                spin={spin}/>;
     } else {
-      return (
-        <button onClick={this.props.onRemove} className="remove">
-          <i className={this.getIcon('close')}/>
-        </button>
-      );
+      return <IconButton 
+                className="remove"
+                onClick={this.props.onRemove}
+                icon="close"
+                spin={spin}/>;
     }
   }
 
@@ -36,8 +30,10 @@ class Todo extends Component {
   render() {
     return (
       <li className="todo">
-        <span className={this.getTitleClass()}>{this.props.todo.title}</span>
-        {this.getAction()}
+        <span className={this.getTitleClass()}>
+          {this.props.todo.title}
+        </span>
+        {this.getButton()}
       </li>
     );
   }

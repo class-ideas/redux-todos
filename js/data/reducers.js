@@ -62,14 +62,14 @@ function saveTodo(state, action) {
         title: action.title,
         objectId: null
       });
-      return merge(state, {todos});
+      return merge(state, {todos, addingNewTodo: true});
     break;
     
     case SAVE_TODO_SUCCESS:
-      return modifyTodo(state, {
+      return merge(modifyTodo(state, {
         when: todo => !todo.objectId,
         then: todo => merge(todo, action.json)
-      });
+      }), {addingNewTodo: false});
     break;
     
     default:

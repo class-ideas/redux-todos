@@ -12,11 +12,7 @@ import App from './app';
 //   console.log('state change:', store.getState())
 // );
 
-store.dispatch(fetchTodos())
-
-// store.dispatch(fetchTodos()).then(() => {
-//   store.dispatch(saveTodo('Check sugar'));
-// });
+store.dispatch(fetchTodos());
 
 ReactDom.render(
   <Provider store={store}>
@@ -24,14 +20,3 @@ ReactDom.render(
   </Provider>,
   document.querySelector('.react-wrapper')
 );
-
-// store.dispatch(fetchTodos()).then(() => {
-//   console.log('store', store.getState());
-// });
-
-// import store from './store';
-
-// ReactDom.render(
-//   <Placeholder/>,
-//   document.querySelector('.react-wrapper')
-// );
