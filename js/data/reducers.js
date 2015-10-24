@@ -24,6 +24,10 @@ function merge(...objs) {
   return Object.assign({}, ...objs);
 }
 
+function sameRecord(a, b) {
+  return a.objectId === b.objectId;
+}
+
 function handleActions(hash) {
   return function(state, action) {
     if (action.type in hash) {
@@ -35,59 +39,41 @@ function handleActions(hash) {
   }
 }
 
-function fetchTodos(state, action) {
-  switch (action.type) {
-    case FETCH_TODOS_REQUEST:
-      return merge(state, {loading: true});
-    break;
-    
-    case FETCH_TODOS_SUCCESS:
-      return merge(state, {
-        loading: false, 
-        todos: action.json.results
-      });
-    break;
-    
-    default:
-      return state;
-    break;
+const fetchTodos = handleActions({
+  FETCH_TODOS_REQUEST: (state) => {
+    return merge(state, {loading: true});
+  },
+  FETCH_TODOS_SUCCESS: (state, action) => {
+    return merge(state, {
+      loading: false, 
+      todos: action.json.results
+    });
   }
-}
+})
 
-function saveTodo(state, action) {
-  switch (action.type) {
-    case SAVE_TODO_REQUEST:
-      let todos = state.todos.slice();
-      todos.push({
-        title: action.title,
-        objectId: null
-      });
-      return merge(state, {todos, addingNewTodo: true});
-    break;
-    
-    case SAVE_TODO_SUCCESS:
-      return merge(modifyTodo(state, {
-        when: todo => !todo.objectId,
-        then: todo => merge(todo, action.json)
-      }), {addingNewTodo: false});
-    break;
-    
-    default:
-      return state;
-    break;
+const saveTodo = handleActions({
+  SAVE_TODO_REQUEST: (state, action) => {
+    return merge(state, {pendingTodo: action.todo});
+  },
+  SAVE_TODO_SUCCESS: (state, action) => {
+    let newTodo = merge(state.pendingTodo, action.json);
+    return merge(state, {
+      todos: [...state.todos, newTodo],
+      pendingTodo: null
+    });
   }
-}
+});
 
 const completeTodo = handleActions({
   COMPLETE_TODO_REQUEST: (state, action) => {
     return modifyTodo(state, {
-      when: todo => todo.objectId === action.todo.objectId,
+      when: todo => sameRecord(todo, action.todo),
       then: todo => merge(todo, {isUpdating: true})
     });
   },
   COMPLETE_TODO_SUCCESS: (state, action) => {
     return modifyTodo(state, {
-      when: todo => todo.objectId === action.todo.objectId,
+      when: todo => sameRecord(todo, action.todo),
       then: todo => merge(todo, {isUpdating: false}, action.todo)
     });
   }
@@ -96,19 +82,20 @@ const completeTodo = handleActions({
 const resetTodo = handleActions({
   RESET_TODO_REQUEST: (state, action) => {
     return modifyTodo(state, {
-      when: todo => todo.objectId === action.todo.objectId,
+      when: todo => sameRecord(todo, action.todo),
       then: todo => merge(todo, {isUpdating: true})
     });
   },
   RESET_TODO_SUCCESS: (state, action) => {
     return modifyTodo(state, {
-      when: todo => todo.objectId === action.todo.objectId,
+      when: todo => sameRecord(todo, action.todo),
       then: todo => merge(todo, {isUpdating: false}, action.todo)
     });
   }
 });
 
-function rootReducer(state = {loading: false, todos: []}, action) {
+function rootReducer(state = {loading: false, todos: []}
+  , action) {
   switch (action.type) {
     case FETCH_TODOS_REQUEST:
     case FETCH_TODOS_SUCCESS:

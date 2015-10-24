@@ -30,8 +30,8 @@ export function fetchTodosSuccess(json) {
   return {type: FETCH_TODOS_SUCCESS, json};
 }
 
-export function saveTodoRequest(title) {
-  return {type: SAVE_TODO_REQUEST, title}
+export function saveTodoRequest(todo) {
+  return {type: SAVE_TODO_REQUEST, todo}
 }
 
 export function saveTodoSuccess(json) {
@@ -54,9 +54,7 @@ export function resetTodoSuccess(todo) {
   return {type: RESET_TODO_SUCCESS, todo};
 }
 
-// export function resetTodo(id) {
-//   return {type: RESET_TODO, id};
-// }
+// async
 
 export function fetchTodos() {
   return function(dispatch) {
@@ -69,7 +67,7 @@ export function fetchTodos() {
 
 export function saveTodo(title) {
   return function(dispatch) {
-    dispatch(saveTodoRequest(title));
+    dispatch(saveTodoRequest({title}));
     return request.post(TODO_URL, {title})
       .then(response => response.json())
       .then(json => dispatch(saveTodoSuccess(json)));

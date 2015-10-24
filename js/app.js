@@ -6,7 +6,7 @@ import IconButton from './icon_button';
 
 class App extends Component {
   render() {
-    const { dispatch, todos, addingNewTodo } = this.props;
+    const { dispatch, todos, pendingTodo } = this.props;
     const newTodo = event => {
       event.preventDefault();
       let todoTitle = this.refs.newTodo.value;
@@ -20,7 +20,7 @@ class App extends Component {
           onSubmit={newTodo}
           className="todo-add">
           <input ref="newTodo" placeholder="Add something todo"/>
-          <IconButton icon="plus" spin={addingNewTodo}/>
+          <IconButton icon="plus" spin={!!pendingTodo}/>
         </form>
         <Todos
           onComplete={(t) => dispatch(completeTodo(t))} 
@@ -36,7 +36,7 @@ class App extends Component {
 function select(state) {
   return {
     todos: state.todos,
-    addingNewTodo: state.addingNewTodo
+    pendingTodo: state.pendingTodo
   };
 }
 
