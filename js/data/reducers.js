@@ -41,6 +41,7 @@ const fetchTodos = handleActions({
   FETCH_TODOS_REQUEST: (state) => {
     return merge(state, {loading: true});
   },
+  
   FETCH_TODOS_SUCCESS: (state, action) => {
     return merge(state, {
       loading: false, 
@@ -53,6 +54,7 @@ const createTodo = handleActions({
   CREATE_TODO_REQUEST: (state, action) => {
     return merge(state, {pendingTodo: action.todo});
   },
+  
   CREATE_TODO_SUCCESS: (state, action) => {
     let newTodo = merge(state.pendingTodo, action.json);
     return merge(state, {
@@ -69,6 +71,7 @@ const updateTodo = handleActions({
       then: todo => merge(todo, {isUpdating: true})
     });
   },
+  
   UPDATE_TODO_SUCCESS: (state, action) => {
     return modifyTodo(state, {
       when: todo => sameRecord(todo, action.todo),
