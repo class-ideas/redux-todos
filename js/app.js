@@ -4,6 +4,10 @@ import { updateTodo, createTodo } from './data/actions';
 import Todos from './todos';
 import IconButton from './icon_button';
 
+function merge(...objs) {
+  return Object.assign({}, ...objs);
+}
+
 class App extends Component {
   render() {
     const { dispatch, todos, pendingTodo } = this.props;
@@ -14,10 +18,12 @@ class App extends Component {
       dispatch(createTodo({title}));
     }
     const completeTodo = (todo) => {
-      dispatch(updateTodo(Object.assign({}, todo, {completeAt: new Date()})));
+      let updatedTodo = merge(todo, {completeAt: new Date()});
+      dispatch(updateTodo(updatedTodo));
     }
     const resetTodo = (todo) => {
-      dispatch(updateTodo(Object.assign({}, todo, {completeAt: null})));
+      let updatedTodo = merge(todo, {completeAt: null});
+      dispatch(updateTodo(updatedTodo));
     }
     return (
       <div>
