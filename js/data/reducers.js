@@ -1,12 +1,10 @@
 import {
-  SAVE_TODO_REQUEST, 
-  SAVE_TODO_SUCCESS, 
-  FETCH_TODOS_SUCCESS, 
   FETCH_TODOS_REQUEST,
-  COMPLETE_TODO_REQUEST,
-  COMPLETE_TODO_SUCCESS,
-  RESET_TODO_REQUEST,
-  RESET_TODO_SUCCESS
+  FETCH_TODOS_SUCCESS,
+  CREATE_TODO_REQUEST,
+  CREATE_TODO_SUCCESS,
+  UPDATE_TODO_REQUEST,
+  UPDATE_TODO_SUCCESS
 } from './actions';
 
 function modifyTodo(state, {when, then}) {
@@ -49,13 +47,13 @@ const fetchTodos = handleActions({
       todos: action.json.results
     });
   }
-})
+});
 
-const saveTodo = handleActions({
-  SAVE_TODO_REQUEST: (state, action) => {
+const createTodo = handleActions({
+  CREATE_TODO_REQUEST: (state, action) => {
     return merge(state, {pendingTodo: action.todo});
   },
-  SAVE_TODO_SUCCESS: (state, action) => {
+  CREATE_TODO_SUCCESS: (state, action) => {
     let newTodo = merge(state.pendingTodo, action.json);
     return merge(state, {
       todos: [...state.todos, newTodo],
@@ -64,29 +62,14 @@ const saveTodo = handleActions({
   }
 });
 
-const completeTodo = handleActions({
-  COMPLETE_TODO_REQUEST: (state, action) => {
+const updateTodo = handleActions({
+  UPDATE_TODO_REQUEST: (state, action) => {
     return modifyTodo(state, {
       when: todo => sameRecord(todo, action.todo),
       then: todo => merge(todo, {isUpdating: true})
     });
   },
-  COMPLETE_TODO_SUCCESS: (state, action) => {
-    return modifyTodo(state, {
-      when: todo => sameRecord(todo, action.todo),
-      then: todo => merge(todo, {isUpdating: false}, action.todo)
-    });
-  }
-});
-
-const resetTodo = handleActions({
-  RESET_TODO_REQUEST: (state, action) => {
-    return modifyTodo(state, {
-      when: todo => sameRecord(todo, action.todo),
-      then: todo => merge(todo, {isUpdating: true})
-    });
-  },
-  RESET_TODO_SUCCESS: (state, action) => {
+  UPDATE_TODO_SUCCESS: (state, action) => {
     return modifyTodo(state, {
       when: todo => sameRecord(todo, action.todo),
       then: todo => merge(todo, {isUpdating: false}, action.todo)
@@ -102,19 +85,14 @@ function rootReducer(state = {loading: false, todos: []}
       return fetchTodos(state, action);
     break;
 
-    case SAVE_TODO_REQUEST:
-    case SAVE_TODO_SUCCESS:
-      return saveTodo(state, action);
+    case CREATE_TODO_REQUEST:
+    case CREATE_TODO_SUCCESS:
+      return createTodo(state, action);
     break;
 
-    case COMPLETE_TODO_REQUEST:
-    case COMPLETE_TODO_SUCCESS:
-      return completeTodo(state, action);
-    break;
-
-    case RESET_TODO_REQUEST:
-    case RESET_TODO_SUCCESS:
-      return resetTodo(state, action);
+    case UPDATE_TODO_REQUEST:
+    case UPDATE_TODO_SUCCESS:
+      return updateTodo(state, action);
     break;
 
     default:

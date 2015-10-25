@@ -11,14 +11,11 @@ function merge(...objs) {
 export const FETCH_TODOS_REQUEST = 'FETCH_TODOS_REQUEST';
 export const FETCH_TODOS_SUCCESS = 'FETCH_TODOS_SUCCESS';
 
-export const SAVE_TODO_REQUEST = 'SAVE_TODO_REQUEST';
-export const SAVE_TODO_SUCCESS = 'SAVE_TODO_SUCCESS';
+export const CREATE_TODO_REQUEST = 'CREATE_TODO_REQUEST';
+export const CREATE_TODO_SUCCESS = 'CREATE_TODO_SUCCESS';
 
-export const COMPLETE_TODO_REQUEST = 'COMPLETE_TODO_REQUEST';
-export const COMPLETE_TODO_SUCCESS = 'COMPLETE_TODO_SUCCESS';
-
-export const RESET_TODO_REQUEST = 'RESET_TODO_REQUEST';
-export const RESET_TODO_SUCCESS = 'RESET_TODO_SUCCESS';
+export const UPDATE_TODO_REQUEST = 'UPDATE_TODO_REQUEST';
+export const UPDATE_TODO_SUCCESS = 'UPDATE_TODO_SUCCESS';
 
 // creators
 
@@ -30,28 +27,20 @@ export function fetchTodosSuccess(json) {
   return {type: FETCH_TODOS_SUCCESS, json};
 }
 
-export function saveTodoRequest(todo) {
-  return {type: SAVE_TODO_REQUEST, todo}
+export function createTodoRequest(todo) {
+  return {type: CREATE_TODO_REQUEST, todo}
 }
 
-export function saveTodoSuccess(json) {
-  return {type: SAVE_TODO_SUCCESS, json}
+export function createTodoSuccess(json) {
+  return {type: CREATE_TODO_SUCCESS, json}
 }
 
-export function completeTodoRequest(todo) {
-  return {type: COMPLETE_TODO_REQUEST, todo};
+export function updateTodoRequest(todo) {
+  return {type: UPDATE_TODO_REQUEST, todo};
 }
 
-export function completeTodoSuccess(todo) {
-  return {type: COMPLETE_TODO_SUCCESS, todo};
-}
-
-export function resetTodoRequest(todo) {
-  return {type: RESET_TODO_REQUEST, todo};
-}
-
-export function resetTodoSuccess(todo) {
-  return {type: RESET_TODO_SUCCESS, todo};
+export function updateTodoSuccess(todo) {
+  return {type: UPDATE_TODO_SUCCESS, todo};
 }
 
 // async
@@ -60,36 +49,30 @@ export function fetchTodos() {
   return function(dispatch) {
     dispatch(fetchTodosRequest());
     return request.get(TODO_URL)
-      .then(response => response.json())
-      .then(json => dispatch(fetchTodosSuccess(json)));
+      .then(resp   => resp.json())
+      .then(json   => fetchTodosSuccess(json))
+      .then(action => dispatch(action));
   }
 }
 
-export function saveTodo(title) {
+export function createTodo(todo) {
   return function(dispatch) {
-    dispatch(saveTodoRequest({title}));
-    return request.post(TODO_URL, {title})
-      .then(response => response.json())
-      .then(json => dispatch(saveTodoSuccess(json)));
+    dispatch(createTodoRequest(todo));
+    return request.post(TODO_URL, todo)
+      .then(resp   => resp.json())
+      .then(json   => merge(todo, json))
+      .then(todo   => createTodoSuccess(todo))
+      .then(action => dispatch(action));
   }
 }
 
-export function completeTodo(todo) {
+export function updateTodo(todo) {
   return function(dispatch) {
-    dispatch(completeTodoRequest(todo));
-    let newTodo = merge(todo, {completeAt: new Date()});
-    return request.put(`${TODO_URL}/${todo.objectId}`, newTodo)
-      .then(response => response.json())
-      .then(json => dispatch(completeTodoSuccess(merge(todo, json))));
-  }
-}
-
-export function resetTodo(todo) {
-  return function(dispatch) {
-    dispatch(resetTodoRequest(todo));
-    let newTodo = merge(todo, {completeAt: null});
-    return request.put(`${TODO_URL}/${todo.objectId}`, newTodo)
-      .then(response => response.json())
-      .then(json => dispatch(resetTodoSuccess(merge(todo, json))));
+    dispatch(updateTodoRequest(todo))
+    return request.put(`${TODO_URL}/${todo.objectId}`, todo)
+      .then(resp   => resp.json())
+      .then(json   => merge(todo, json))
+      .then(todo   => updateTodoSuccess(todo))
+      .then(action => dispatch(action));
   }
 }

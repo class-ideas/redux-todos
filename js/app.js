@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { completeTodo, resetTodo, saveTodo } from './data/actions';
+import { updateTodo, createTodo } from './data/actions';
 import Todos from './todos';
 import IconButton from './icon_button';
 
@@ -9,9 +9,15 @@ class App extends Component {
     const { dispatch, todos, pendingTodo } = this.props;
     const newTodo = event => {
       event.preventDefault();
-      let todoTitle = this.refs.newTodo.value;
+      let title = this.refs.newTodo.value;
       this.refs.newTodo.value = '';
-      dispatch(saveTodo(todoTitle));
+      dispatch(createTodo({title}));
+    }
+    const completeTodo = (todo) => {
+      dispatch(updateTodo(Object.assign({}, todo, {completeAt: new Date()})));
+    }
+    const resetTodo = (todo) => {
+      dispatch(updateTodo(Object.assign({}, todo, {completeAt: null})));
     }
     return (
       <div>
@@ -23,8 +29,8 @@ class App extends Component {
           <IconButton icon="plus" spin={!!pendingTodo}/>
         </form>
         <Todos
-          onComplete={(t) => dispatch(completeTodo(t))} 
-          onReset={(t) => dispatch(resetTodo(t))} 
+          onComplete={completeTodo} 
+          onReset={resetTodo} 
           todos={todos}/>
       </div>
     );
