@@ -1,11 +1,5 @@
 # Redux Todos
 
-### Run
+A todo app using React.js and Redux
 
-```shell
-git clone git@github.com:class-ideas/redux-todos.git
-cd react-todos
-npm install
-gulp start
-```
-Then visit localhost:8000
+[Demo](http://class-ideas.github.io/redux-todos/)
