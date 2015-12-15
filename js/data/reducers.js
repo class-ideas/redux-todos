@@ -1,6 +1,8 @@
 import {
   FETCH_TODOS_REQUEST,
   FETCH_TODOS_SUCCESS,
+  CLEAR_TODOS_REQUEST,
+  CLEAR_TODOS_SUCCESS,
   CREATE_TODO_REQUEST,
   CREATE_TODO_SUCCESS,
   UPDATE_TODO_REQUEST,
@@ -50,6 +52,19 @@ const fetchTodos = handleActions({
   }
 });
 
+const clearTodos = handleActions({
+  CLEAR_TODOS_REQUEST: (state) => {
+    return merge(state, {loading: true});
+  },
+  
+  CLEAR_TODOS_SUCCESS: (state, action) => {
+    return merge(state, {
+      loading: false, 
+      todos: action.json.results
+    });
+  }
+});
+
 const createTodo = handleActions({
   CREATE_TODO_REQUEST: (state, action) => {
     return merge(state, {pendingTodo: action.todo});
@@ -87,6 +102,12 @@ function rootReducer(state = {loading: false, todos: []}
     case FETCH_TODOS_SUCCESS:
       return fetchTodos(state, action);
     break;
+
+    case CLEAR_TODOS_REQUEST:
+    case CLEAR_TODOS_SUCCESS:
+      return clearTodos(state, action);
+    break;
+
 
     case CREATE_TODO_REQUEST:
     case CREATE_TODO_SUCCESS:

@@ -12,6 +12,11 @@ h1 {
   text-align: center;
 }
 
+.huge-icon {
+  font-size: 72px;
+  text-align: center;
+}
+
 .todo-add {
   border: 4px solid #d9d9d9;
   border-radius: 2px;
@@ -91,6 +96,27 @@ h1 {
           box-shadow: 0 0 15px darken(#1eb0ff, 20%) inset;
         }
       }
+    }
+  }
+}
+
+
+footer {
+  text-align: center;
+  padding-bottom: 100px;
+  button.clear {
+    width: 200px;
+    margin: 10px;
+    padding: 10px;
+    border: 3px solid lighten(#f64848, 10%);
+    border-radius: 3px;
+    background: #f64848;
+    color: lighten(#f64848, 30%);
+
+    &:hover {
+      background: #ff2828;
+      color: lighten(#ff2828, 40%);
+      box-shadow: 0 0 15px darken(red, 20%) inset;
     }
   }
 }

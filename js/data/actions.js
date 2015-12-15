@@ -1,6 +1,8 @@
 import request from './request';
 
-const TODO_URL = 'https://api.parse.com/1/classes/Todo';
+const BASE_URL = 'https://api.parse.com/1';
+const TODO_URL = `${BASE_URL}/classes/Todo`;
+const BATCH_URL = `${BASE_URL}/batch`;
 
 function merge(...objs) {
   return Object.assign({}, ...objs);
@@ -10,6 +12,9 @@ function merge(...objs) {
 
 export const FETCH_TODOS_REQUEST = 'FETCH_TODOS_REQUEST';
 export const FETCH_TODOS_SUCCESS = 'FETCH_TODOS_SUCCESS';
+
+export const CLEAR_TODOS_REQUEST = 'CLEAR_TODOS_REQUEST';
+export const CLEAR_TODOS_SUCCESS = 'CLEAR_TODOS_SUCCESS';
 
 export const CREATE_TODO_REQUEST = 'CREATE_TODO_REQUEST';
 export const CREATE_TODO_SUCCESS = 'CREATE_TODO_SUCCESS';
@@ -25,6 +30,14 @@ export function fetchTodosRequest() {
 
 export function fetchTodosSuccess(json) {
   return {type: FETCH_TODOS_SUCCESS, json};
+}
+
+export function clearTodosRequest() {
+  return {type: CLEAR_TODOS_REQUEST};
+}
+
+export function clearTodosSuccess(json) {
+  return {type: CLEAR_TODOS_SUCCESS, json};
 }
 
 export function createTodoRequest(todo) {
@@ -51,6 +64,23 @@ export function fetchTodos() {
     return request.get(TODO_URL)
       .then(resp   => resp.json())
       .then(json   => fetchTodosSuccess(json))
+      .then(action => dispatch(action));
+  }
+}
+
+export function clearTodos(todos) {
+  return dispatch => {
+    dispatch(clearTodosRequest());
+    let batch = request.post(BATCH_URL, {
+      requests: todos.map(todo => ({
+        method: "DELETE",
+        path: `/1/classes/Todo/${todo.objectId}`
+      }))
+    });
+    return batch
+      .then(resp   => request.get(TODO_URL))
+      .then(resp   => resp.json())
+      .then(json   => clearTodosSuccess(json))
       .then(action => dispatch(action));
   }
 }
