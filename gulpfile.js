@@ -112,7 +112,7 @@ gulp.task('server', ['default'], function () {
     }));
 });
 
-gulp.task('default', ['html',
+gulp.task('default', [//'html',
                       'sass',
                       'fonts',
                       'normalize',
